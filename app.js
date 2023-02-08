@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const date = require(__dirname + '/date.js');
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -8,32 +8,20 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 
 
-let items = [];
-let workItems = [];
+const items = [];
+const workItems = [];
 
 app.get('/', (req, res) => {
-    var today = new Date();
-    
-    // object to convert date to
-    let options = {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long'
-    };
-
-    // convert date to locale string as specified in options
-    var day = today.toLocaleDateString('en-US', options);
-
-    // add new toDo item
-    
-    
+    const day = date.getDate();
+    // add new toDo item    
     res.render('lists', {listTitle: day, newListItem: items});
     
 });
+
 // post 
 app.post('/', (req, res)=>{
     
-    let item = req.body.addItem;
+    const item = req.body.addItem;
     if (req.body.list === 'Work') {
         workItems.push(item);
         res.redirect('/work');    
@@ -42,7 +30,6 @@ app.post('/', (req, res)=>{
         res.redirect('/');   
     };
 
-    console.log(req.body);
 });
 
 app.get('/work', function(req, res) {
